@@ -1,0 +1,165 @@
+﻿@model eaglinexamp1.Models.Menu
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<script type="text/javascript">
+
+    function selectMenuGroup() {
+        var dd = document.getElementById("MenuGroup");
+        var index = dd.selectedIndex;
+        var value = dd.options[index].value;
+        var text = dd.options[index].text;
+        alert(index + " : " + value + " : " + text);
+
+        $.ajax({
+            url: '/MenuGroups/GetMenuGroup',
+            type: 'POST',
+            datatype: 'json',
+            data: { id: value },
+            success: function (data) {
+                alert("Call was successful " + data)
+            },
+            error: function (data) {
+                alert("Call was unsuccessful " + data)
+            }
+        });
+
+
+    }
+
+</script>
+
+<h2>FullDetails</h2>
+
+<div>
+    <h4>Menu</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MenuTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MenuTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MenuDescritpion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MenuDescritpion)
+        </dd>
+
+        <dt>
+            Select a Menu Group
+        </dt>
+
+        <dd>
+            @Html.DropDownList("MenuGroup", new SelectList(Model.MenuGroups,
+                "MenuGroupId", "MenuGroupTitle"),
+                new { onchange = "selectMenuGroup()" })
+        </dd>
+
+    </dl>
+</div>
+<script type="text/jscript">
+    $('#ButtonID').click(function () {
+        var url = "/Home/TellMeDate";
+        $.get(url, null, function (data) {
+            $("#rData").html(data);
+        });
+    })
+</script>
+
+<button id="ButtonID">push</button>
+<p id="rData">
+</p>
+
+<p>
+    Enter you name @Html.TextBox("Name")
+    <input type="submit" id="SubmitName" value="Submit" />
+</p>
+
+<script type="text/jscript">
+    $('#SubmitName').click(function () {
+        var url = "/Home/WelcomeMsg";
+        var name = $('#Name').val();
+        $.get(url, { input: name }, function (data) {
+            $("#rData").html(data);
+        });
+    })
+</script>
+<h3>Start typing a name in the input field below:</h3>
+
+<form action="">
+    First name: <input type="text" id="txt1" onkeyup="showHint(this.value)">
+</form>
+
+<p>Suggestions: <span id="txtHint"></span></p>
+
+<script>
+function showHint(str) {
+  var xhttp;
+  if (str.length == 0) {
+    document.getElementById("txtHint").innerHTML = "";
+    return;
+  }
+  xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+      document.getElementById("txtHint").innerHTML = xhttp.responseText;
+    }
+  };
+  xhttp.open("GET", "gethint.asp?q="+str, true);
+  xhttp.send();
+}
+</script>
+<h2>AJAX</h2>
+
+<button type="button" onclick="loadDoc()">Request data</button>
+
+<p id="demo"></p>
+
+
+<script>
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+      document.getElementById("demo").innerHTML = xhttp.responseText;
+    }
+  };
+  xhttp.open("GET", "demo_get.asp", true);
+  xhttp.send();
+}
+</script>
+<h2>AJAX</h2>
+
+<button type="button" onclick="loadDoc()">Request data</button>
+
+<p id="demo"></p>
+
+
+<div id="demo"><h2>Let AJAX change this text</h2></div>
+
+<button type="button" onclick="loadDoc()">Change Content</button>
+
+<script>
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+      document.getElementById("demo").innerHTML = xhttp.responseText;
+    }
+  };
+  xhttp.open("GET", "ajax_info.txt", true);
+  xhttp.send();
+}
+</script>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MenuID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
